@@ -870,7 +870,6 @@ class FileTransfer(metaclass=SingletonMeta):
                         message_medias[message_key] = media
                     # 汇总集数、大小
                     if not message_medias[message_key].is_in_episode(media.get_episode_list()):
-                        message_medias[message_key].total_episodes += media.total_episodes
                         message_medias[message_key].size += media.size
                 # 生成nfo及poster
                 if bluray_disk_dir and media.type == MediaType.MOVIE:
@@ -915,11 +914,12 @@ class FileTransfer(metaclass=SingletonMeta):
                 ExceptionUtils.exception_traceback(err)
                 log.error("【Rmt】文件转移时发生错误：%s - %s" % (str(err), traceback.format_exc()))
         # 循环结束
+        log.info("【Rmt】%s 处理完成，总数：%s，失败：%s" % (in_path, total_count, failed_count))
+        message_medias[message_key].total_episodes = total_count - failed_count
         # 统计完成情况，发送通知
         if message_medias:
             self.message.send_transfer_tv_message(message_medias, in_from)
         # 总结
-        log.info("【Rmt】%s 处理完成，总数：%s，失败：%s" % (in_path, total_count, failed_count))
         if alert_count > 0:
             reason = "、".join(alert_messages)
             # 解发事件

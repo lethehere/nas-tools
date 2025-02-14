@@ -336,8 +336,8 @@ class Downloader(metaclass=SingletonMeta):
                 __download_fail("下载链接为空")
                 return None, None, "下载链接为空"
             # 获取种子内容，磁力链不解析
-            if url.startswith("magnet:"):
-                content = url
+            # if url.startswith("magnet:"):
+            #     content = url
             else:
                 # 获取Cookie和ua等
                 site_info = self.sites.get_sites(siteurl=url)
@@ -518,7 +518,7 @@ class Downloader(metaclass=SingletonMeta):
                         # 种子文件为单独文件
                         save_dir = os.path.join(visit_dir, dl_files[0])
                         subtitle_dir = visit_dir
-                    elif url.startswith("magnet:"):
+                    elif content.startswith("magnet:"):
                         save_dir = None
                         subtitle_dir = visit_dir
                     else:
